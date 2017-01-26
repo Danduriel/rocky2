@@ -1,24 +1,35 @@
-#include <SFML/Graphics.hpp>
+#include "engine.h"
+#include "helper.h"
+
+// Add only very first state game should jump into
+#include "teststate.h"
+#include "menustate.h"
+#include "playstate.h"
+
 
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode(200, 200), "SFML works!");
-    sf::CircleShape shape(100.f);
-    shape.setFillColor(sf::Color::Green);
+    //Instance of game engine (Holds the sfml screen)
+    engine game;
 
-    while (window.isOpen())
+    //Mainly to initialise the sf::window
+    game.init(1280,800,"Rocky the Rocket's Path to infinity and beyond");
+
+    //Set start State
+    game.changestate(menustate::instance());
+
+
+    //Main Loop - No touching nessecary
+    //Add framelimit
+    while (game.running())
     {
-        sf::Event event;
-        while (window.pollEvent(event))
-        {
-            if (event.type == sf::Event::Closed)
-                window.close();
-        }
-
-        window.clear();
-        window.draw(shape);
-        window.display();
+        //printf("mainloop\n");
+        game.handleEvents();
+        game.update();
+        game.draw();
     }
+
+    game.cleanup();
 
     return 0;
 }
